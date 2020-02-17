@@ -1,0 +1,17 @@
+# 数据提取的方法
+
+## json
+  - 数据交换格式，看起来像python类型（列表，字典） 字符串
+  - json.loads
+    - 把json字符串转化为python类型
+    - 'json.loads(json字符串)'
+  - json.dumps
+   - 把python类型转化成json字符串
+   - 'json.dumps({"a":"a","b":2})'
+
+  -案例：爬取豆瓣电视剧
+
+
+
+## lxml
+ 
