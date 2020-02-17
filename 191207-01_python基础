@@ -1,0 +1,64 @@
+# python常用知识点
+
+## 关于format()函数：
+ - ```python
+        class Role:
+            def __init__(self,name,level,blood):
+              self.name = name  #角色名称
+              self.level = level  #角色等级
+              self.blood = blood   #角色血量
+
+            def __str__(self):
+              return "('{name}',{level},{blood})".format(**vars(self))
+    ```
+ - **vars(self):直接调用了构造函数中的对象
+
+## 从REPL到IDLE
+- 1.使用REPL,在cmd中直接输入python+回车即可
+- 2.想要获取帮助信息，输入help()即可，结束帮助页面输入quit
+- 3.退出REPL使用quit()函数，如果只想执行一个片段又不想进入REPL，可以直接在：
+```python
+      C:\Users\Administrator>python -c "print('hello world')"
+```
+- 4.IDLE是python官方内建的编辑器(由python编写)
+- 5.设置python源码文件的编码
+```python
+      # coding:UTF_8
+      name = input("your name")
+      print('hello',name,'!)
+```
+- python解释器只要在注释中看到coding:\<encoding name>或者coding=\<encoding name>就可以了,因为python解释器会使用下面这段正则表达式来提取文字编码的设置：^[\t\v]*#.*?coding[:=][\t]*([-_.a-zA-Z0-9]+)
+
+## 初始模块与软件包
+- 每个.py文件本身就是一个模块，每个.py.文件的主文件名就是模块名称，想要导入模块时必须使用import关键词来指定模块名称，若要引用模块名称，则必须在名称前加上模块名称与一个“.”符号，例如hello.name
+- 在\__builtins__模块中的函数，类等名称都可以不用import而直接引用，而且不用加上模块名称作为前置，在RPEL中使用dir()函数查询\_\_builtins__模块，dir(__builtins\_\_\)
+
+### 设置PYTHONPATH
+- 如果想将他人提供的.py文件存放到其他文件夹中管理，可以设置PYTHONPATH环境变量来解决这个问题
+
+```python
+          SET PYTHONPATH=c:\wrokspace
+```
+- python解释器会根据sys.path列表中的路径来寻找模块，使用sys.path可以查看python的环境变量
+- 如果windows安装了多个版本的python环境，也可以按照类似方式设置PATH环境变量，例如 SET PATH=Python环境路径，这样就可以切换执行不同版本的puthon解释器
+- 如果想要动态的管理模块的寻找路径，那么也可以通过程序更改sys.path的内容来达到目的
+```python
+      sys.path.append('c:\wrokspace')
+```
+
+### 使用软件包管理模块
+- 用不同的文件夹来存放不同作用的文件，模块也应该分门别类地存放
+- 文件夹中一定要有一个\_\_init__.py文件，该文件才会被视为一个软件包（在软件包的高级管理中，\_\_init__.py中其实也可以编写程序，目前暂时保持为空）
+- 如果模块数量很多，也可以创建多层次的软件包，每个担任软件包的文件夹与子文件夹中，各要有一个\_\_init__.py文件
+
+### 使用import as 与 from import
+- 如果想要改变被导入模块在当前模块中的变量名称，可以使用 import as ，使用import as 是将模块重新命名
+- 使用import from 直接将模块中指定的名称导入
+```python
+      from sys import argv,path
+      from sys inport *   #导入sys模块中的全部名称
+```
+
+## 使用IDE
+- 使用IDE(integrated Development Environment)集成开发环境，管理一些软件包与相关资源管理的工作
+- 略。。。。。
