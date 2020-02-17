@@ -1,0 +1,169 @@
+### flask库入门使用
+
+- requirements文件：python项目中必须包含一个requirements文件，用于记录所有以来包及其精确的版本号，
+- 在虚拟环境使用以下命令将当前虚拟环境中的依赖包一版本号生成至文件中：
+```python
+#在当前虚拟环境生成文件
+$ pip freeze > xxxx.txt
+#对比下载文件中环境依赖的包
+$ pip install -r xxxx.txt
+```
+
+
+#### flask库入门学习
+
+- 使用步骤：
+  - 1.导入Flask扩展
+  ```python
+  from flask import Flask
+  ```
+
+  - 2.创建Flask应用程序实例
+  ```python
+  #需要传入__name__,作用是为了确定资源所在的路径
+  app = Flask(__name__)
+  ```
+
+  - 3.定义路由及视图函数
+  ```python
+  #Flask中定义路由时通过装饰器实现的
+  #路由默认只支持GET，如果需要增加，需要自行指定
+  @app.route('/')
+  def index():
+    return 'hello flask'
+  # 使用同一个视图函数，来显示不同用户的订单信息
+  # <>定义路由参数，<>内需要起个名字
+  #有时候需要对路由做访问优化，订单ID应该是int类型
+  @app.route('/orders/<int:orders_id>')
+  def get_orders_id(orders_id):
+    #参数类型，默认是字符串，unicode
+    print(type(orders_id))
+
+    #需要在视图函数的()内填入参数名，后面的代码才能去使用
+    return 'orders_id',orders_id
+  ```
+
+
+  - 4.启动程序
+  ```
+  if __name__ == '__main__':
+    #执行了app.run,就会将Flask程序运行在一个简易的服务器(Flask提供的，用于测试的)
+    app.run()
+  ```
+
+
+##### templates文件夹存放.HTML文件
+##### static文件夹存放图片
+##### flash用于消息的闪现
+##### request.method：获取http传输方法
+##### request.form.get('value'):获取表单数据
+
+
+##### 数据库连接以及配置：
+- app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@127.0.0.1:3306/库名
+
+#### 创建模型
+ - 常用的SQLAlchemy字段类型：
+   - Integer ：普通整数，32位
+   - Float：浮点数
+   - String ： 变长字符串
+   - Text ：变长字符串，对较长或不限长度的字符串做了优化
+   - Unicode ： 变长Unicode字符串
+   - UnicodeText ： 变长Unicode字符串，对较长或不限长度的字符串做了优化
+   - Boolean ： 布尔值
+   - Date ： 时间
+   - Time ：日期和时间
+   - LargeBinary ： 二进制文件
+
+- 常用的SQLAlchemy列选项
+    - primary_key ： 如果为True，代表表的主键
+   - unique ： True，代表不允许出现重复的值
+   - index ： True，为这列创建索引，提高查询效率
+   - nullable ： True，允许为空
+   - default ： 定义默认值
+
+- 常用的SQLAlchemy关系选项
+   - backref ： 在关系的另一模型中添加反向引用
+   - primary join ： 明确指定两个模型之间使用的联结条件
+   - uselist ： 如果为False，不适用列表，而使用标量值
+   - order_by ： 指定关系中记录的排序方式
+   - secondary ： 指定多对多中记录的排序方式
+   - secondary join ： 在SQLAlchemy中无法自行决定是，指定多对多关系中的二级联结条件
+
+
+#### 数据库操作
+ - 常用的SQLAlchemy查询过滤器
+   - filter() ： 把过滤器添加到原查询上，返回一个新查询
+   - filter_by() ： 把等值过滤器添加到原查询上，返回一个新查询
+   - limit ： 使用制定的值限定原查询返回的结果
+   - offset() ： 便宜原查询返回的结果，返回一个新查询
+   - order_by() : 根据指定条件队员查询结果进行排序，返回一个新查询
+   - group_by() ： 根据指定条件对原查询结果进行分组，返回一个新查询
+
+
+- 常用的SQLAlchemy查询执行器
+  - all() ： 以列表形式返回查询的所有结果
+  - first() ： 返回查询结果的第一个结果，如果未查到，返回None
+  - first_or_404() ： 返回查询的第一个结果，如果未查到，返回404
+  - get() : 返回指定主键对应的行，如果不存在，返回None
+  - get_or)404() ： 返回指定主键对应的行，如果不存在，返回404
+  - count() ： 返回查询结果的数量
+  - paginate() ：返回一个Paginate对象，它包含指定范围内的结果
+
+- 数据库表的操作
+```python
+db.create_all()  #创建表
+db.drop_all()   #删除表
+'''提交一条数据'''
+role1 = Role(name='admin')
+db.session.add(role1)
+db.session.commit()
+'''提交多条数据'''
+user1 = Role(name='user1'，email='user1@163.com',pswd='123456',role_id=user1.id)
+user2 = Role(name='user2'，email='user2@163.com',pswd='123456',role_id=user2.id)
+db.session.add_all([user1,user2])
+db.session.commit()
+```
+
+- 查询数据库表内容
+```python
+User.query.filter_by(name='wang').all()   #filter_by()精确查询
+User.query.first()   #first()返回查询道德第一个对象
+User.query.all()  #all()返回查询到的所有对象
+#查询User函数中name列所有以g结尾的数据
+User.query.filter(User.name.endswith('g')).all()  
+#返回名字不等于wang的所有数据
+User.query.filter(User.name!='wang').all()   
+#参数为主键，如果主键不存在没有返回内容
+User.query.get()   
+#逻辑与，需要导入and_，返回and()条件满足的所有数据
+User.query.filter(and_(User.name!='wang',User.email.endswith('163.com'))).all()
+#逻辑或，需要导入or_
+User.query.filter(or_(User.name!='wang',User.email.endswith('163.com'))).all()
+#逻辑非，导入not_
+User.query.filter(not_(User.name=='chen')).all()
+```
+
+- 操作数据库
+```python
+#查询后删除数据
+user = User.query.get(1)
+db.session.delete(user)  #使用delete()删除数据
+db.session.commit()
+
+#更新数据
+user = User.query.get(1)
+user.name = 'chen'
+db.session.commit()
+#使用update更新数据
+User.query,filter_by(name='zhang').update({'name':'li'})
+
+#查询数据库表内容
+user1 = User.query.get(1)  #查询主键为1的所有信息
+user1.us   #查询该角色的所有用户
+user1.role   #查询用户属于什么角色
+```
+
+
+### WEB表单与Flask-WTF
+- 在Flask中，为了处理web表单，我们一般使用Flask-WTF扩展，它封装了WTForms，并且它有验证表单数据的功能

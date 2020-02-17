@@ -1,0 +1,70 @@
+## ip代理概述
+
+- IP代理的获取：1.直接搜索西刺代理(免费版)，大象代理(专业版)
+- 2.登录大象代理，选择网页提取，选择范围：大陆以外，获得代理ip，或者选择api方式提取ip
+
+
+### IP代理的构建实战
+```python
+import requests
+
+ip = '183.146.157.21:9999'
+
+proxies = {
+    'http':ip
+    }
+
+url = 'http://www.baidu.com'
+res = requests.get(url,proxies=proxies)
+res.raise_for_status()
+print(res.text)
+```
+
+### IP代理池构建的第一种方案(适合于代理IP稳定的情况)
+```python
+import requests
+import random
+
+ippools = [
+    "112.111.217.9:808",
+    "175.42.122.101:9999",
+    "117.88.177.205:3000",
+    "117.69.201.107:9999",
+    ]
+
+for x in ippools:
+    proxies = {
+        'http':x
+        }
+    url = 'http://www.baidu.com'
+    res = requests.get(url,proxies=proxies)
+    if res.status_code == 200:
+        print(res.text)
+        break
+    else:
+        raise 'AttributeError'
+
+```
+
+### IP代理池构建的第二种方案(适用于代理IP不稳定的情况)
+- 主要是使用获取代理IP的api接口，下面用大象代理举例
+```python
+import requests
+
+def get_ip():
+    url = 'http://tpv.daxiangdaili.com/ip/?id=*********&num=1'
+    res = requests.get(url)
+    ip = res.text
+    proxies = {
+        'http':ip
+        }
+    return proxies
+try:
+    url = 'http://www.baidu.com'
+    res = requests.get(url,proxies=get_ip())
+    res.raise_for_status()
+    res.encoding = res.apparent_encoding
+    txt = res.content.decode('utf-8')
+except:
+    print('重新获取')
+```

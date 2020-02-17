@@ -1,0 +1,29 @@
+## 用户代理池的构建
+
+### 构建用户代理池，将不同的用户代理组建成为一个池子，然后随机调用
+```python
+import requests
+import re
+import random
+
+
+#用户代理池
+use_apools=[
+    'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36',
+    'Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko',
+    'Mozilla/5.0 (Windows NT 5.1; U; en; rv:1.8.1) Gecko/20061208 Firefox/2.0.0 Opera 9.50',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko',
+    'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 UBrowser/4.0.3214.0 Safari/537.36'
+]
+
+def use_pool(use_apools):
+    this_ua = random.choice(use_apools)
+    print(this_ua)
+    headers = {'User-Agent':this_ua}
+    url = 'https://www.baidu.com'
+    res = requests.get(url,headers=headers)
+    print(res.text)
+
+use_pool(use_apools)
+
+```

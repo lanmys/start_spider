@@ -1,0 +1,12 @@
+# retrying模块的学习：
+pip install retrying
+```python
+
+from retrying import retry
+
+@retry(stop_max_attrmpt_number=3)
+def fun1():
+print('this is func1')
+raise ValueError('this is test error')
+# 设置报错也执行三次
+```
